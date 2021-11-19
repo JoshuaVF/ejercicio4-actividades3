@@ -1,0 +1,498 @@
+1. Introducció
+Els desaroyadores necessiten gestionar el codi dels projectes en els quals estan
+treballant. Ens trobem davant una realitat amb escenaris en els quals molts professionals
+incorporen codi al projecte, un codi viu, que pot canviar una vegada donat per finalitzat o bé per
+peticions dels clients, adaptació al mercat, correcció d'errors… Amb aquests canvis es van creant
+versions, però com podem gestionar-los per a treballar de la manera més òptima possible i
+emmagatzemant els canvis per si haguérem de recuperar alguna instrucció o dada? Ací és on
+entra en joc el control de versions.
+El control de versions és la capacitat de recordar tots els canvis que es realitzen tant en
+l'estructura de directoris com en el contingut dels arxius. Permetent les següents accions
+generalment:
+ Recuperar un document, una carpeta, o un projecte en un moment concret del seu
+desenvolupament.
+ Mantindre un cert control dels canvis que es realitzen sobre documents, arxius o projectes
+que comparteixen diverses persones o un equip de treball, per la qual cosa és útil quan es
+fa necessari saber qué canvis es fan, qui els fa i quan es realitzen.
+2. Terminologia
+Existeixen una sèrie de termes que s'utilitzen i són comuns per a la majoria de les eines de
+control de versions
+ Repositori: Lloc on s'emmagatzemen totes les dades i els canvis.
+ Revisió o versió: Una revisió és una versió concreta de les dades emmagatzemades.
+ Tag: Quan es crea una versió concreta en un moment determinat del desenvolupament
+d'un projecte se li posa una etiqueta, de manera que es puga localitzar i recuperar en
+qualsevol moment.
+ Tronc (trunk): Línia principal de desenvolupament d'un projecte.
+ Rama o ramificar (branch): Les branques són còpies d'arxius , carpetes o projectes. Quan
+es crea una branca es crea una bifurcació del projecte i es creen dues línies de
+desenvolupament.
+ Checkout: Crear una còpia de treball del projecte, o d'arxius i carpetes del repositori en
+l'equip local. Per defecte s'obté l'última versió, encara que també es pot indicar una versió
+concreta.
+ commit o checkin: Es realitza commit quan es confirmen els canvis realitzats en local per a
+integrar-los al repositori.
+1
+UNITAT 2 - Control de versions
+ merge: Una fusió consisteix a unir els canvis realitzats sobre un o diversos arxius en una
+única revisió.
+ Conflicte: Ocorre en situacions en la qual el sistema no és capaç de fusionar els canvis
+(per exemple, dos usuaris han canviat la mateixa línia en el mateix moment). Aquest usuari
+haurà dé resoldre el conflicte combinant els canvis o triant un d'ells.
+3. GIT
+Git és un sistema de control de versions distribuït que té com a objectiu millorar la
+velocitat de desenvolupament dels projectes, facilitar el treball en equip i portar el control
+de canvis, tot això amb un disseny simple.
+En Git, la forma que s'emmagatzema les dades rep el nom de snapshot o
+instantània. Cada instantània emmagatzema l'estat del codi en un moment determinat.
+3.1 Snapshots en Git
+La forma en la qual Git emmagatzema les dades rep el nom del snapshot. Cada
+snapshot es pot veure com una instantània dels fitxers en un instant determinat.
+Altres sistemes de control de versions emmagatzemen de cada fitxer una llista de
+canvis en moments determinats però en Git cada vegada que fem un commit, es pren una
+instantània de l'estat de TOTS els fitxers en aqueix instant i s'emmagatzema la referència
+d'aqueix snapshot. Si el fitxer no ha patit canvis, Git només emmagatzema una referència
+al fitxer prèviament guardat.
+3.2 Estats dels fitxers en Git
+ Per a entendre el funcionament d'aquest sistema de control de versions cal tindre
+clar que els fitxers poden estar en diferents estats:
+2
+UNITAT 2 - Control de versions
+ Modified: hem editat un fitxer però encara no hem manat els canvis amb Git
+ni a l'àrea de preparació ni al repositori.
+ Staged : el fitxer està en l'àrea de preparació. Tenim un fitxer marcat com
+que ha sigut canviat i passarà a formar part del nostre repositori en el
+següent commit.
+ commited: el fitxer es troba en el nostre repositori sense canvis respecte al
+de la còpia local.
+Què passarà o com treballarem amb Git normalment?
+ Farem un Checkout del projecte, és a dir, portarem els canvis del nostre
+repositori.
+ Modificarem els fitxers que desitgem en el nostre directori de treball.
+ A continuació passarem els fitxers que hem modificat a l'àrea de treball
+(stage area)
+ Farem un commit i tots els fitxers que estiguen en l'àrea de preparació
+passaran al repositori.
+3.3. Instal·lació i configuració de Git
+Per a instal·lar Git acudirem a la pàgina oficial: https://Git-scm.com/downloads
+Una vegada instal·lat haurem de fer una configuració bàsica. Això és la activitat
+Actividades1-UT2.odt.
+En Git haurem de fer tres configuracions: la relativa al sistema, a l'usuari i al
+projecte. Cadascuna d'aquestes configuracions s'emmagatzema en un fitxer diferent amb
+el format variable=valor, però solem tindre comando que editen aquestes configuracions.
+Git config [àmbit] [acció] [parámetro1_acció] [parámetro2_acció] [parámetro3_acció]…
+on:
+• àmbit: fa referència a si la modificació és general (--system), de l'usuari (–global) o del
+projecte (opció per defecte, no és necessari indicar res)
+• acció: acció a realitzar en el fitxer:
+• list: llistar tota la configuració
+• get: obtindre un valor d'una variable.
+• add: afegir a una variable un valor.
+• unset: elimina la variable.
+3
+Realiza Actividades 1 - UT2
+UNITAT 2 - Control de versions
+3.4. Comandos en Git
+Git ens permet treballar amb els fitxers mitjançant una sèrie de comandos. Podem
+usar aquests comandos a nivell de consola, o bé usant també un client gràfic o fins i tot el
+tindrem integrat dins del nostre IDE.
+Per a comprendre aquests comandos començarem usant un terminal. En el
+següent esquema es mostren alguns comandos bàsics del sistema de control de versions:
+3.5 Començant amb Git
+Per a
+Començar a usar Git necessitem un repositori. Tenim dues maneres de començar aquest
+repositori:
+ Git clone <url-repositori-remot>: creem una còpia d'un repositori remot en local.
+Aquesta opció la veurem més endavant quan treballem amb repositoris remots.
+ Git init: Transforma el directori actual en un directori Git pel que podrem començar
+a usar aquest sistema de control de versions en el nostre repositori local.
+Començarem treballant amb un repositori local. El primer pas és inicialitzar un
+repositori en el que serà el meu projecte. Portarem la informació d'una acadèmia,
+començant la informació per les persones matriculades. Crea una carpeta que es diga
+acadèmia i amb l'opció botó dret→ Git bash here, pots llançar el comando de Git que
+t'inicialitzarà el repositori.
+4
+UNITAT 2 - Control de versions
+> Git init
+Initialized empty Git repository in /Users/.../.Git/
+Git respon que ha inicialitzat un repositori. Si consultem amb un explorador de
+fitxers veurem que dins del directori s'ha creat una nova carpeta oculta anomenada .git,
+que en la qual Git guarda tota la informació relativa al sistema de control de versions.
+3.5.1. El meu primer commit.
+Ara que ja tenim el repositori creat ja podem començar a portar baix seguiment un
+fitxer.
+Abans de començar, consultarem l'estat del repositori. Per a això Git ens ofereix un
+comando:
+> Git estatus
+On branch master
+No commits yet
+nothing to commit (create/copy files and use "Git add" to track)
+Ací Git ens informa que encara no hi ha hagut commits, que el nostre repositori
+està buit però també que no hi ha res per a pujar al repositori. Podem veure això com un
+estat inicial per dir-ho així.
+Ens crearem un fitxer anomenat persones.txt, en el qual anirem afegint noms de
+persones matriculades en la nostra acadèmia. Una vegada creat tornem a consultar l'estat
+amb el comando ja vist.
+> Git estatus
+On branch master
+No commits yet
+Untracked files:
+ (use "Git add <file>..." to include in what will be committed)
+persones.txt
+nothing added to commit but untracked files present (use "Git add" to track)
+Aquesta vegada ens avisa de què disposem d'un fitxer, persones.txt, que no està
+baix seguiment (...untracked files present...), és a dir que mai ho hem afegit al nostre
+sistema Git. És important saber diferenciar els diferents estats del fitxer per a saber en
+quina situació es troba el nostre repositori.
+5
+UNITAT 2 - Control de versions
+Per a fer un commit del fitxer, la primera vegada, el preparem passant-lo a l'àrea de
+preparació. Per a això (consulta esquema superior) usarem el comando Git add <nomenefitxer> o Git add . (afegim tot el contingut del directori actual). Seguidament torne a teclejar
+un Git estatus per a veure en quin estat es troba el meu repositori.
+> Git add .
+> Git estatus
+On branch master
+No commits yet
+Changes to be committed:
+ (use "Git rm --cached <file>..." to unstage)
+new file: persones.txt
+Podem observar que el missatge ha canviat. Ara ens informa que encara no hem
+fet commit però ja tenim un fitxer preparat per a quan vulguem fer aqueix commit.
+Finalment, afegirem finalment al repositori el fitxer. Per a això farem un commit. És
+important que en el commit usem el paràmetre -m amb un missatge aclaridor del que
+estem fent en aquesta actualització del repositori. Si no ho posàrem, llavors, s'obriria
+l'editor que tinguem configurat perquè escriguérem ací el missatge.
+>Git commit -m "Afegint el meu primer fitxer"
+[master (root-commit) 56974bb] Afegint el meu primer fitxer
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 persones.txt
+Ara si comprovem l'estat del repositori, ens informarà que no hi ha res per a fer el
+checkin ja que la informació és la mateixa en la meua còpia de treball que en el meu
+repositori local:
+>Git estatus
+On branch master
+nothing to commit, working tree clean
+6
+UNITAT 2 - Control de versions
+3.5.2. Commits
+Fer commit, o utilitzat en altres VCS com fer checkin, consistirà a fer una revisió en
+la qual pujarem una sèrie de fitxers o modificacions sobre els ja existents. L'objecte
+commit conté la següent informació:
+ Autor: prendrà el nom de l'usuari indicat en la configuració inicial.
+ Data i hora
+ Missatge: Indicat amb el paràmetre -m a l'hora de fer el commit. Si aquest
+paràmetre se'ns oblidara o no el posàrem, s'obrirà l'editor que tinguem configurat
+per a inserir el missatge.
+ Una referència a l'anterior commit.
+ Una referència a l'objecte tree.
+Els objectes commit tenen un identificador únic que es calcula amb un algorisme
+SHA1. Aquest número podreu observar que és molt llarg i poc fàcil de manejar, és
+per això que Git ens proporciona una referència simbòlica anomenada HEAD que
+apunta al commit en el qual estem treballant. Usarem aquesta referència en alguns
+comandos.
+3.5.3 Àrea de preparació
+En molts sistemes de control de versions, només formen part del VCS aquells
+fitxers que marquem com a tal. No obstant això, per a Git, tots els fitxers que estiguen en
+la còpia de treball formen part de Git . Però què ocorre si no vull que tots ells formen part
+d'aquest seguiment? I si he canviat alguns que no vull incorporar al pròxim commit? Per
+això apareix l'àrea de preparació.
+Com hem vist en la seqüència de comandos anterior, encara que Git ens informa
+que existeixen nous fitxers i de quins estan modificats, no tots tindran perquè formar part
+del repositori.
+7
+UNITAT 2 - Control de versions
+Si volem que un fitxer forme part del repositori i es vagen introduint els canvis, la
+primera vegada haurem d'afegir-lo a l'àrea de preparació (Git add fitxer) i després fer un
+commit (Git commit -m).
+Per a tots aquells fitxers que ja han fet per primera vegada aquesta incorporació,
+tenim l'opció d'incorporar els canvis fent aquests dos passos o si volguérem incorporar
+tots els canvis que hem fet en la còpia de treball directament podem executar Git commit -
+a -m “missatge del commit”.
+Comentem això amb un exemple: edite el fitxer persones.txt afegint tres persones
+matriculades a la nostra acadèmia:
+Com tots els canvis que he fet en tots els fitxers del meu projecte vull que formen
+part de la pròxim commit, puc passar-los directament de la còpia de treball al repositori:
+>Git commit -a -m "Tres nous matriculats"
+[master cb459f6] Tres nous matriculats
+ 1 file changed, 3 insertions(+)
+3.5.4 Obtindre informació
+Existeixen una sèrie de comandos que em proporcionaran informació útil sobre
+l'estat del meu repositori i al cap i a la fi sobre els meus fitxers:
+Git estatus: com ja s'ha vist, mostra l'estat del directori de treball i l'àrea de preparació.
+Proporcionarà diferent informació si:
+- No tens arxius nous baix seguiment ni modificats
+- Afiges un arxiu nou el qual no has començat a seguir.
+8
+UNITAT 2 - Control de versions
+- Afegim el nou fitxer. Passa a estar baix seguiment.
+- Modifiquem un arxiu que estava en la revisió anterior.
+Git log: Amb aquest comando podrem examinar les instantànies confirmades, és a dir
+l'historial de commits que anem fent en el projecte. És important observar que mentre Git
+estatus et deixa observar l'estat de la teua còpia de treball, àrea de preparació i repositori,
+el comando Git log solament ens deixa observar l'historial ja confirmat. Aquest comando
+té moltes opcions, vegem les més interessants:
+ Git log -n : Ens permet filtrar el nombre de confirmacions
+ Git log –oneline: Presenta la informació més compactada, sol ser més
+còmode per a observar l'estat del repositori
+ Git log -author=”” Realitza cerques d'un autor en concret
+ Git log --graph --decorate –oneline. Per a mostrar l'historial amb nom de
+branques, commits, etc.
+Git show: Amb aquesta eina podem obtindre informació de detalls dels commit. Si posem
+l'identificador del commit darrere (sobra amb els sis primers dígits) podrem obtindre la
+informació concreta d'aqueixa instantània. Si volem el de l'últim commit, podrem usar el
+comando sense paràmetres o amb la referència HEAD.
+9
+UNITAT 2 - Control de versions
+3.6 Branques
+La creació de branques és una funció disponible en molts sistemes de control de
+versions, no obstant això Git introdueix una nova manera de gestionar-les que evita
+ocupar tant d'espai.
+En Git les branques són només capdavanters a nous commits, per la qual cosa
+s'optimitza molt l'emmagatzematge i el maneig d'aquests canvis. Quan creguem una nova
+branca, Git crea un nou punter i simplement es tracta del maneig d'aquest.
+Farem un exemple per a intentar entendre el funcionament de branques.
+3.6.1 Creació de branques
+Imaginem que tenim una situació especial, que haurem d'emmagatzemar
+nous noms de persones que es matricularan a un curs en concret que oferim.
+Realitzem una nova branca que es diga curs.
+Les branques en realitat són capdavanters a les noves instantànies, per la
+qual cosa l'historial no canviarà en crear una branca realment. Això és important
+tindre-ho en compte per a comprendre el funcionament de branques.
+Tenim dues maneres de fer-ho:
+>git branch curs
+>git Checkout curs
+Switched to branch 'curs'
+O també usant un sol comando podríem posar:
+> git Checkout -b curse
+Switched to branch 'curs'
+10
+UNITAT 2 - Control de versions
+Podem consultar les branques creades executant el comando git branch
+sense cap altre paràmetre:
+> git branch
+* curs
+ master
+Aquest comando ens està indicant que existeixen dues branques, curs i
+master i que ara mateix estem situats en la branca curse. Master no és una
+branca que nosaltres hàgem creat, però és el nom que rep per defecte la branca
+principal de Git . Convé no canviar-la de nom.
+Una altra funció molt important de Git branch és eliminar branques. Ho
+farem usant l'opció -d, millor en minúscules, és més segura, ja que ens obliga a
+fer els commits i no deixar gens inestable.
+3.6.2 Canviar de branca i mesclar
+El comando git checkout et permet canviar de branca. En canviar de branca,
+s'actualitzen els arxius en el directori. Vegem un exemple:
+Creem un nou fitxer en la branca curse i ho afig a Git :
+> touch continguts.txt
+> git add continguts.txt
+> git commit -m "Afig continguts"
+[curs ff64403] Afig continguts
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 continguts.txt
+Observem el contingut del directori:
+> ls
+continguts.txt personas.txt
+Faig el canvi de branca:
+> Git Checkout master
+11
+UNITAT 2 - Control de versions
+Switched to branch 'master'
+Torne a observar el contingut del directori:
+> ls
+persones.txt
+Com es pot observar, el fitxer continguts.txt no existeix en la branca master ja que
+ha sigut creat en la branca curse.
+Igualment, passarà amb els canvis en els fitxers. Afegirem al fitxer persones.txt de
+la branca cursos tres alumnes matriculats nous al curs a més dels ja existents.
+> git commit -a -m "Tots els matriculats al curs"
+[curs 329b4ff] Tots els matriculats al curs
+ 1 file changed, 3 insertions(+)
+Imaginem que ara tots els alumnes matriculats al curs volen formar part ara dels
+nostres matriculats a l'acadèmia (representats per master). En aqueix cas hem d'ajuntar
+els canvis de la branca curse amb els de la branca master. A aquesta operació se'n diu
+mesclar i es realitza executant el comando git merge <branca-amb-la-que-volemmesclar>.
+> git Checkout master
+> git merge curs
+Updating 324c77c..329b4ff
+Fast-forward
+ continguts.txt | 0
+ persones.txt | 3 +++
+ 2 files changed, 3 insertions(+)
+ create mode 100644 continguts.txt
+12
+UNITAT 2 - Control de versions
+Apareixen ara tots els noms dins de la seua branca master? Comprova-ho!
+Efectivament, amb el comando git merge s'ha realitzat una fusió de diverses
+confirmacions en un únic historial. La fusió és la forma que té Git d'unir aqueixes
+bifurcacions i integrar-les en una sola branca. Quan fem un git merge <branca-amb-la-que
+volem-mesclar> només es reflecteixen canvis en la branca actual, en l'altra branca tot
+roman igual, no es veu afectada.
+3.6.3 Mescla de branques. Conflictes.
+Existeixen diferents situacions de fusió, de mescla.
+Fast-forward
+En aquesta mena de fusió (la produïda amb l'exemple anterior) Git pot
+simplement moure els punters. A efectes pràctics, hi ha hagut canvis lineals, és a
+dir, s'han afegit noves línies, amb noves revisions i en fusionar unim tots aqueixos
+canvis.
+No obstant això, aquest tipus de fusions no sempre es poden donar i
+apareixen altres formes de mescla.
+Auto-merging
+13
+UNITAT 2 - Control de versions
+Imaginem una situació com la següent: en la branca master es produeix un
+commit i també es produeix en la branca curse. Totes dues branques divergeixen,
+ja no és un avanç lineal.
+Què ocorre quan executem en master Git merge curs? Per a nosaltres, és un
+procés transparent, igual que anteriorment, en la branca master, en el fitxer
+persones.txt apareixeran les persones afegides tant en master com en curs. No
+hem de preocupar-nos, és un procés intern! Però quin ha ocorregut realment?
+Perquè Git ha creat un nou commit amb referència als dos commits anteriors.
+14
+UNITAT 2 - Control de versions
+En tots dos casos, fast-forward o auto-merging, no he de preocupar-me, és un
+procés totalment automàtic, executarem el comando i s'afegiran les noves línies.
+Existeix la possibilitat de fer una fusió més neta, el rebase, si vols pots investigarho.
+Hi ha a vegades que aquesta manera automàtica de mesclar no és possible. Hi ha
+vegades que la mateixa línia d'un fitxer és modificada en les dues branques, i Git
+es pregunta Amb quin opció em quede? La d'una branca? La d'una altra? Les
+dues? O cap? Per exemple, en el fitxer persones l'usuari Fran ens ha indicat que
+modifiquem el nom perquè el seu nom és Francisco Javier. En la branca master el
+secretari tecleja Francisco J. i en la branca curs, el professor del curs tecleja
+Francisco Javier. A l'hora de mesclar, què ocorre? Com pot decidir Git si ens
+interessa emmagatzemar Francisco Javier o Francisco J.? Això és una situació de
+conflicte. Vegem què passa i com resoldre-ho.
+En branca master:
+> git commit -a -m "Canviant nom Fran-> Francisco J."
+[master a9b6713] Canviant nom Fran-> Francisco J.
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+En branca curse:
+> git Checkout curs
+> git commit -a -m "Canviant nom Fran-> Francisco Javier"
+[curs 9130f04] Canviant nom Fran-> Francisco Javier
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+Salt a la branca master i faig la mescla:
+> git Checkout master
+Switched to branch 'master'
+> git merge curs
+auto-merging persones.txt
+CONFLICT (content): merge conflict in persones.txt
+Automatic merge failed; fix conflicts and then commit the result.
+Efectivament, hi ha hagut un conflicte, Git no sap amb qui quedar-se. Obrim el
+nostre fitxer (obert amb ATOM que ens ofereix una ajuda visual) i observem:
+15
+UNITAT 2 - Control de versions
+Tenim identificat amb una sèrie d'i <<< HEAD el canvi proposat en la branca actual
+i amb >>> i nom de la branca que es fusionarà, el canvi d'allí. I ara podem triar.
+L'única cosa que he de fer és esborrar aqueix xicotet marcat, triar si em quede amb
+una opció, altra o les dues. I després un commit.
+3.7 Repositoris remots
+Git és un sistema de control de versions distribuït. Al contrari que uns altres,
+per exemple SVN, que és centralitzat. Aquest últim, utilitza un únic repositori per
+a funcionar, de tal manera que es van fent check in dels canvis de les còpies de
+treball dels desaroyadores al repositori central. El model de col·laboració de
+Git és distribuït. Proporciona a cada desenvolupador la seua pròpia còpia del
+repositori, de tal manera que tens el teu historial local i la teua pròpia estructura
+de branques. D'aquesta manera, Git permet compartir des d'una sèrie de
+conformacions fins a branques senceres entre repositoris.
+Per a veure l'ús dels repositoris remots, ens crearem un repositori no actiu, que ens
+permeta efectuar repositoris push sobre ell. Així que crearem una nova carpeta
+anomenada repositoris-remots. Dins d'ella una carpeta que es dirà acadèmia:
+> mkdir repositoris-remots
+> cd repositoris-remots
+> mkdir acadèmia
+> cd acadèmia
+> Git init --bare
+16
+UNITAT 2 - Control de versions
+Fora d'aquest repositori “remot” que hem creat, crearem un directori que siga una
+còpia d'aquest repositori remot. Suposarem que és la seu d'Alacant, així que farem una
+còpia del repositori remot en una carpeta que anomenarem Alacant.
+Per a això, usem el comando git clone. Amb ell podrem clonar el repositori remot en
+la carpeta actual.
+> cd ..
+> mkdir Alacant
+> git clone acadèmia Alacant
+Cloning into 'Alacant'...
+warning: You appear to have cloned an empty repository.
+done.
+Crearem un fitxer, persones.txt, a Alacant i posem tres matriculats. Fem el
+commit:
+> cd Alacant
+> touch persones.txt
+> printf "Fran\nLaura\nLuis" >>persones.txt
+> git add persones.txt
+> git commit -m "Afig els tres primers matriculats"
+[master (root-commit) aaec762] Afig els tres primers matriculats
+ 1 file changed, 3 insertions(+)
+ create mode 100644 persones.txt
+Podem observar ara que aquest repositori està connectat amb un altre remot si
+teclegem el comando git remote:
+> git remote
+origin
+Amb el comando git remote anem a poder a part de veure, crear i eliminar
+connexions amb altres repositoris. En clonar un repositori amb git clone automàticament
+es crea una connexió anomenada origin amb aqueix repositori clonat i aqueixa és l'eixida
+que ha produït el comando, ens està informant que tenim aqueixa connexió creada amb el
+repositori clonat.
+Ara imaginarem que manarem a l'acadèmia les dades dels nostres alumnes. Per a
+això hem de “pujar” els canvis a aquest repositori remot central. El comando per a fer això
+és git push <remot> <branca>. En aquest cas seria git push origin master, però just això
+dos noms, com són els establits per defecte es poden ometre.
+> git push
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 253 bytes | 253.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+17
+UNITAT 2 - Control de versions
+To /Users/carmen/Dropbox/Curs 20-21/ED/Control de versions/acadèmia/
+ [new branch] master -> master
+Una vegada executat el push, execute un git log i podrem veure que les branques
+es troben en sincronia (tant HEAD, com origin estan situades en el mateix commit):
+> git log --oneline --decorate
+aaec762 (HEAD -> master, origin/master) Afig els tres primers matriculats
+Suposem ara que l'acadèmia obri una aula a Elx. Per això creem el directori Elx i
+clonem el repositori remot en aquest directori.
+>cd ..
+>mkdir Elx
+>git clone acadèmia/ Elx/
+Cloning into 'Elx'...
+done.
+Ja estem enllaçats a aqueix repositori remot. En la seu d'Alacant tenim un nou
+matriculat. Afegim el seu nom al fitxer persones.txt i fem un commit.
+> printf "\nMarina" >>persones.txt
+> git commit -a -m "Afig un nou matriculat"
+[master 1635bab] Afig un nou matriculat
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+Examinem l'històric:
+> git log --oneline --decorate
+1635bab (HEAD -> master) Afig un nou matriculat
+aaec762 (origin/master) Afig els tres primers matriculats
+Veiem que les branques no estan en sincronia, que en el repositori local, estem un
+commit per davant que en el repositori origen. És a dir, el nou matriculat no està en origen
+encara. Però què passa en la còpia efectuada a Elx?
+> cd ../Elx
+> git log --oneline --decorate
+aaec762 (HEAD -> master, origin/master, origin/HEAD)
+En aquest cas, en aqueixa còpia, les branques sí que estan en sincronia, ja que no
+són conscients del canvi efectuat. Fem un git push en el repositori d'Alacant.
+> cd ../Alacant
+>git push
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 289 bytes | 289.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To /Users/carmen/Dropbox/Curs 20-21/ED/Control de versions/Remot/
+ aaec762..1635bab master -> master
+18
+UNITAT 2 - Control de versions
+I tornem a consultar el log en la còpia d'Elx:
+> cd ../Elx
+> git log --oneline --decorate
+aaec762 (HEAD -> master, origin/master, origin/HEAD)
+Obtenim exactament el mateix resultat. Llavors, Com podem comprovar si hi ha
+canvis? Perquè cal executar un comando d'actualització de punters. Aquest comando és
+Git fetch. Després per a portar els canvis podem executar una fusió de la branca remota
+amb la branca local. Però aquests dos comandos, se solen substituir per un que realitza
+les dues accions: Git pull.
+> git pull
+git pull
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), re
